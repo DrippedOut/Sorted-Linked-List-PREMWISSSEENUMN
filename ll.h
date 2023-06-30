@@ -12,12 +12,10 @@ public:
   int isEmpty();
   void insert(int value);
   void printList();
- 
+
   ~LL();
-/* With doubly linked list*/
-/*
- void printListR();
-*/
+  /* With doubly linked list*/
+  void printListR();
 };
 
 LL::LL() {
@@ -53,19 +51,23 @@ void LL::insert(int value) {
     while (currentPtr != NULL && value > currentPtr->get_data()) {
       previousPtr = currentPtr;            // walk to ...
       currentPtr = currentPtr->get_next(); // ... next node
-                                          
+
     } // end while
 
     // insert new node at beginning of list
     if (previousPtr == NULL) {
-        newPtr->set_next(hol);
-        hol = newPtr;
-       
-      }  // end if
-    else { 
+      newPtr->set_next(hol);
+      hol = newPtr;
+
+    } // end if
+    else {
       // insert new node between previousPtr and currentPtr
       previousPtr->set_next(newPtr);
+      newPtr->set_prev(previousPtr);
+      
       newPtr->set_next(currentPtr);
+      if(currentPtr!=NULL)
+      currentPtr->set_prev(newPtr);
     } // end else
     ++size;
   } // end if
@@ -84,6 +86,7 @@ int LL::deletes(int value) {
   if (value == hol->get_data()) {
     tempPtr = hol;         // hold onto node being removed
     hol = hol->get_next(); // de-thread the node
+    hol->set_prev(NULL);
     size--;
 
     delete tempPtr; // free the de-threaded node
@@ -107,7 +110,9 @@ int LL::deletes(int value) {
       tempPtr = currentPtr;
       previousPtr->set_next(currentPtr->get_next());
       currentPtr = currentPtr->get_next();
-    
+      // if (currentPtr)
+      //   currentPtr->set_prev(previousPtr);
+
       delete tempPtr;
       size--;
       return value;
@@ -141,4 +146,32 @@ void LL::printList() {
 
     puts("NULL\n");
   } // end else
+}
+
+void LL::printListR() {
+  // if list is empty
+  if (size == 0) {
+    cout << "List is empty." << endl;
+  } // end if
+  else {
+    cout << "The reversed list is:" << endl;
+
+    NodePtr currentPtr = hol;
+    int i;
+    //go to the last node first
+    for(i=0;i<size-1 ;i++){
+    //while(currentPtr->get_next()!=NULL){
+      currentPtr=currentPtr->get_next();
+    }
+    
+    for (i = 0; i < size; i++) {
+      currentPtr->print();
+      cout << "  ->";
+      currentPtr = currentPtr->get_prev();
+    } // end while
+
+    puts(" NULL\n");
+  } // end else
 } // end function printList
+
+
