@@ -12,10 +12,10 @@ public:
   int isEmpty();
   void insert(int value);
   void printList();
-
-  ~LL();
   /* With doubly linked list*/
   void printListR();
+  ~LL();
+
 };
 
 LL::LL() {
@@ -35,7 +35,7 @@ LL::~LL() {
   }
 }
 
-// insert a new value into the list in sorted order
+/* // insert a new value into the list in sorted order
 void LL::insert(int value) {
   NodePtr newPtr;      // pointer to new node
   NodePtr previousPtr; // pointer to previous node in list
@@ -44,7 +44,6 @@ void LL::insert(int value) {
   newPtr = new Node(value); // create node & put value in
 
   if (newPtr != NULL) { // is space available
-
     previousPtr = NULL;
     currentPtr = hol;
     // loop to find the correct location in the list
@@ -120,7 +119,66 @@ int LL::deletes(int value) {
   }   // end else
 
   return '\0';
-} // end function delete
+} // end function delete */
+
+void LL::insert(int value) {
+    NodePtr newPtr = new Node(value);
+    if (newPtr != NULL) {
+        if (isEmpty()) {
+            hol = newPtr;
+            newPtr->set_next(newPtr);
+        } else {
+            NodePtr currentPtr = hol;
+            while (currentPtr->get_next() != hol) {
+                currentPtr = currentPtr->get_next();
+            }
+            currentPtr->set_next(newPtr);
+            newPtr->set_next(hol);
+            hol = newPtr;
+        }
+        ++size;
+    } else {
+        cout << value << " not inserted. No memory available." << endl;
+    }
+}
+
+int LL::deletes(int value) {
+    if (isEmpty()) {
+        return '\0';
+    }
+
+    NodePtr currentPtr = hol;
+    NodePtr previousPtr = nullptr;
+
+    // Find the node with the value to delete
+    while (currentPtr->get_data() != value) {
+        if (currentPtr->get_next() == hol) {
+            return '\0'; // Value not found
+        }
+        previousPtr = currentPtr;
+        currentPtr = currentPtr->get_next();
+    }
+
+    if (currentPtr == hol) {
+        if (size == 1) {
+            hol = nullptr;
+        } else {
+            previousPtr = hol;
+            while (previousPtr->get_next() != hol) {
+                previousPtr = previousPtr->get_next();
+            }
+            hol = currentPtr->get_next();
+            previousPtr->set_next(hol);
+        }
+    } else {
+        previousPtr->set_next(currentPtr->get_next());
+    }
+
+    delete currentPtr;
+    --size;
+    return value;
+}
+
 
 // return 1 if the list is empty, 0 otherwise
 int LL::isEmpty() { return hol == NULL; } // end function isEmpty
